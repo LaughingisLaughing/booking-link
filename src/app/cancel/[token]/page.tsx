@@ -1,0 +1,11 @@
+import { CancelBooking } from "@/features/booking/CancelBooking";
+
+export default async function CancelPage({
+  params,
+}: {
+  params: Promise<{ token: string }>;
+}) {
+  const { token } = await params;
+  return <CancelBooking token={token} />;
+}
+

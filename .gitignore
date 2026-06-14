@@ -1,0 +1,7 @@
+.env*
+.next
+node_modules
+data/*.db
+data/*.db-*
+npm-debug.log*
+*.tsbuildinfo

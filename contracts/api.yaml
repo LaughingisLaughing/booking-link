@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: Booking Link API
+  version: 0.1.0
+paths:
+  /api/availability:
+    get:
+      summary: Return available booking slots.
+      parameters:
+        - name: timezone
+          in: query
+          required: false
+          schema:
+            type: string
+            example: Asia/Shanghai
+      responses:
+        "200":
+          description: Availability response.
+        "503":
+          description: Google Calendar is not connected.
+  /api/book:
+    post:
+      summary: Book one available slot.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [start, name, email, timeZone]
+              properties:
+                start:
+                  type: string
+                  format: date-time
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                note:
+                  type: string
+                timeZone:
+                  type: string
+      responses:
+        "200":
+          description: Booking confirmed and Google Calendar event created.
+        "409":
+          description: Slot is no longer available.
+  /api/cancel:
+    post:
+      summary: Cancel a booking by token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+      responses:
+        "200":
+          description: Booking canceled.
+        "404":
+          description: Token not found.
+  /api/admin/google/start:
+    get:
+      summary: Start owner Google OAuth flow.
+      parameters:
+        - name: secret
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "307":
+          description: Redirect to Google OAuth.
+  /api/admin/google/callback:
+    get:
+      summary: Complete owner Google OAuth flow.
+      responses:
+        "307":
+          description: Redirect to /admin after token storage.
+  /api/health:
+    get:
+      summary: Health and setup status.
+      responses:
+        "200":
+          description: Service health.
