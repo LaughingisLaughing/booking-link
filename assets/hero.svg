@@ -1,0 +1,32 @@
+<svg viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Booking Link, a self-hosted booking link for Google Calendar">
+  <style>
+    .bp-line { stroke: #ffffff; stroke-opacity: .22; stroke-width: 1; fill: none; }
+    .bp-strong { stroke: #ffffff; stroke-opacity: .75; stroke-width: 1.2; fill: none; }
+    .bp-title { font: 600 46px ui-monospace, 'SF Mono', Menlo, monospace; fill: #f5f8ff; letter-spacing: 3px; }
+    .bp-mono { font: 500 11px ui-monospace, 'SF Mono', Menlo, monospace; fill: #9fb6d9; letter-spacing: 2.5px; }
+    .bp-dim { font: 500 11px ui-monospace, 'SF Mono', Menlo, monospace; fill: #d7e3f7; letter-spacing: 2px; }
+    .bp-march { stroke-dasharray: 7 6; animation: bp-march 1.6s linear infinite; }
+    @keyframes bp-march { to { stroke-dashoffset: -26; } }
+    .bp-spin { transform-origin: 790px 50px; animation: bp-spin 24s linear infinite; }
+    @keyframes bp-spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <rect width="880" height="220" fill="#14365c"/>
+
+  <path class="bp-line" d="M0 55 H880 M0 110 H880 M0 165 H880 M110 0 V220 M330 0 V220 M550 0 V220 M770 0 V220"/>
+  <path class="bp-strong" d="M28 16 v20 M18 26 h20 M852 184 v20 M842 194 h20"/>
+
+  <g class="bp-spin">
+    <circle class="bp-strong" cx="790" cy="50" r="22"/>
+    <path class="bp-strong" d="M790 20 V36 M790 64 V80 M760 50 H776 M804 50 H820"/>
+  </g>
+
+  <text class="bp-mono" x="64" y="62">FIG. 01 / SELF-HOSTED SCHEDULING</text>
+  <text class="bp-title" x="60" y="122">BOOKING LINK</text>
+
+  <path class="bp-strong bp-march" d="M64 154 H560"/>
+  <path class="bp-strong" d="M64 147 v14 M560 147 v14"/>
+  <text class="bp-dim" x="64" y="182">GOOGLE FREEBUSY -> SQLITE LOCKS -> CALENDAR EVENT</text>
+
+  <text class="bp-mono" x="64" y="206">NEXT.JS 16 / TYPESCRIPT 5 / MIT / V0.1.0</text>
+</svg>

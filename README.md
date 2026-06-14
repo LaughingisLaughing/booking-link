@@ -1,24 +1,42 @@
+<div align="center">
+
+<img src="assets/hero.svg" width="100%" alt="Booking Link, a self-hosted booking link for Google Calendar"/>
+
 # Booking Link
 
-[![CI](https://github.com/LaughingisLaughing/booking-link/actions/workflows/ci.yml/badge.svg)](https://github.com/LaughingisLaughing/booking-link/actions/workflows/ci.yml)
-[![Secret Scan](https://github.com/LaughingisLaughing/booking-link/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/LaughingisLaughing/booking-link/actions/workflows/secret-scan.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+One shareable booking page. One Google Calendar owner. No team scheduler, account system, or calendar mirror.
 
-A tiny self-hosted booking link for Google Calendar. It gives you a Calendly-style public booking page without syncing your whole calendar or running a multi-user SaaS.
+<p>
+  <a href="https://github.com/LaughingisLaughing/booking-link/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/LaughingisLaughing/booking-link/ci.yml?branch=main&label=CI&style=for-the-badge&logo=githubactions&logoColor=white" alt="CI status"/></a>
+  <a href="https://github.com/LaughingisLaughing/booking-link/actions/workflows/secret-scan.yml"><img src="https://img.shields.io/github/actions/workflow/status/LaughingisLaughing/booking-link/secret-scan.yml?branch=main&label=Secret%20Scan&style=for-the-badge&logo=githubactions&logoColor=white" alt="Secret Scan status"/></a>
+  <a href="https://github.com/LaughingisLaughing/booking-link/releases/tag/v0.1.0"><img src="https://img.shields.io/github/v/tag/LaughingisLaughing/booking-link?style=for-the-badge&label=Release&color=14365c" alt="Latest tag"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/LaughingisLaughing/booking-link?style=for-the-badge&color=0f766e" alt="MIT license"/></a>
+</p>
 
-Use it when you want one shareable booking page, one Google Calendar owner, and no account system beyond your own OAuth connection.
+<p>
+  <img src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js 16"/>
+  <img src="https://img.shields.io/badge/React-19-087ea4?style=for-the-badge&logo=react&logoColor=white" alt="React 19"/>
+  <img src="https://img.shields.io/badge/TypeScript-5-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5"/>
+  <img src="https://img.shields.io/badge/SQLite-local%20locks-003b57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite"/>
+</p>
 
-## What It Does
+<a href="https://github.com/LaughingisLaughing/booking-link">
+  <img src="https://socialify.git.ci/LaughingisLaughing/booking-link/image?description=1&font=Inter&language=1&name=1&owner=1&pattern=Circuit%20Board&theme=Dark" alt="Booking Link GitHub social card" width="640"/>
+</a>
 
-- Shows a public booking page with a calendar-style date picker and time list.
-- Reads busy time from Google Calendar with FreeBusy.
-- Creates Google Calendar events with the invitee as an attendee.
-- Stores encrypted owner OAuth tokens and local booking locks in SQLite.
-- Supports tokenized cancellation links.
+</div>
 
-## How It Works
+---
+
+## The Problem
+
+You want to share a booking link, but most schedulers start by turning a simple personal workflow into a SaaS account, a team scheduling model, or a calendar sync surface you do not need.
+
+Booking Link keeps the surface small: a public booking page, a private owner admin flow, Google Calendar availability, and local SQLite locks.
+
+## The Fix
+
+Visitors pick an available slot. The app checks Google Calendar FreeBusy, applies local booking locks, creates a Google Calendar event, and stores only the local booking state plus encrypted owner OAuth tokens.
 
 ```mermaid
 flowchart LR
@@ -38,13 +56,9 @@ Booking Link is an app, not a published npm package. Run it from the GitHub sour
 git clone https://github.com/LaughingisLaughing/booking-link.git
 cd booking-link
 npm install
-```
-
-Create local configuration:
-
-```bash
 cp env.example .env
 npm run gen:key
+npm run dev
 ```
 
 Paste the generated key into `TOKEN_ENCRYPTION_KEY`, then set:
@@ -61,26 +75,27 @@ Create a Google OAuth 2.0 Web application with this authorized redirect URI:
 http://localhost:3000/api/admin/google/callback
 ```
 
-Enable the Google Calendar API for the same Google Cloud project.
+Enable the Google Calendar API for the same Google Cloud project. Then open `http://localhost:3000/admin`, enter `ADMIN_SECRET`, and complete the owner OAuth flow.
 
-Start the app:
+## What It Does
 
-```bash
-npm run dev
-```
-
-Connect Google Calendar at `http://localhost:3000/admin`, enter `ADMIN_SECRET`, and complete the owner OAuth flow. Then share `http://localhost:3000`.
+| Capability | How it works |
+| --- | --- |
+| Public booking page | Calendar-style date picker and available time list |
+| Availability checks | Google Calendar FreeBusy plus local pending and confirmed bookings |
+| Event creation | Google Calendar event insert with the invitee as an attendee |
+| Token storage | Owner OAuth tokens encrypted at rest with `TOKEN_ENCRYPTION_KEY` |
+| Cancellation | Tokenized cancellation link backed by local booking state |
 
 ## Commands
 
-```bash
-npm install
-npm run dev
-npm run typecheck
-npm run build
-npm run start
-npm run gen:key
-```
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the local development server |
+| `npm run build` | Build the production app |
+| `npm run start` | Start the production server after a build |
+| `npm run typecheck` | Run TypeScript without emitting files |
+| `npm run gen:key` | Generate a 32-byte base64 token encryption key |
 
 ## Configuration
 
@@ -102,7 +117,8 @@ npm run gen:key
 | `MINIMUM_NOTICE_MINUTES` | No | Minimum notice before a booking can start. |
 | `AVAILABILITY_JSON` | No | JSON rules for weekly availability. |
 
-Example availability:
+<details>
+<summary>Availability JSON example</summary>
 
 ```json
 [
@@ -111,6 +127,8 @@ Example availability:
 ```
 
 Luxon weekday numbers are Monday `1` through Sunday `7`.
+
+</details>
 
 ## Deployment Notes
 
@@ -123,7 +141,7 @@ Luxon weekday numbers are Monday `1` through Sunday `7`.
 
 - Do not commit `.env`, Google OAuth client JSON files, or `data/*.db*`.
 - Refresh tokens are encrypted at rest with `TOKEN_ENCRYPTION_KEY`.
-- The app is designed for a single owner and single instance. Use a persistent disk if deploying with SQLite.
+- The app is designed for a single owner and single instance.
 - If a secret was ever committed to a public repo, rotate it before rewriting history.
 
 ## Project Docs
@@ -134,6 +152,14 @@ Luxon weekday numbers are Monday `1` through Sunday `7`.
 - [Changelog](CHANGELOG.md)
 - [Security policy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
+
+## Star History
+
+<div align="center">
+  <a href="https://star-history.com/#LaughingisLaughing/booking-link&Date">
+    <img src="https://api.star-history.com/svg?repos=LaughingisLaughing/booking-link&type=Date&theme=dark" alt="Star history chart for LaughingisLaughing/booking-link" width="600"/>
+  </a>
+</div>
 
 ## License
 
