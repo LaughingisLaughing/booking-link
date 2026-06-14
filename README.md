@@ -1,8 +1,14 @@
 # Booking Link
 
-![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
+[![CI](https://github.com/LaughingisLaughing/booking-link/actions/workflows/ci.yml/badge.svg)](https://github.com/LaughingisLaughing/booking-link/actions/workflows/ci.yml)
+[![Secret Scan](https://github.com/LaughingisLaughing/booking-link/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/LaughingisLaughing/booking-link/actions/workflows/secret-scan.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 
 A tiny self-hosted booking link for Google Calendar. It gives you a Calendly-style public booking page without syncing your whole calendar or running a multi-user SaaS.
+
+Use it when you want one shareable booking page, one Google Calendar owner, and no account system beyond your own OAuth connection.
 
 ## What It Does
 
@@ -26,20 +32,22 @@ flowchart LR
 
 ## Quick Start
 
-1. Install dependencies.
+Booking Link is an app, not a published npm package. Run it from the GitHub source:
 
 ```bash
+git clone https://github.com/LaughingisLaughing/booking-link.git
+cd booking-link
 npm install
 ```
 
-2. Create local configuration.
+Create local configuration:
 
 ```bash
 cp env.example .env
 npm run gen:key
 ```
 
-Paste the generated key into `TOKEN_ENCRYPTION_KEY`. Then set:
+Paste the generated key into `TOKEN_ENCRYPTION_KEY`, then set:
 
 - `OWNER_EMAIL`
 - `OWNER_NAME`
@@ -47,9 +55,7 @@ Paste the generated key into `TOKEN_ENCRYPTION_KEY`. Then set:
 - `GOOGLE_CLIENT_SECRET`
 - `ADMIN_SECRET`
 
-3. Create a Google OAuth 2.0 Web application.
-
-Use this authorized redirect URI:
+Create a Google OAuth 2.0 Web application with this authorized redirect URI:
 
 ```text
 http://localhost:3000/api/admin/google/callback
@@ -57,15 +63,24 @@ http://localhost:3000/api/admin/google/callback
 
 Enable the Google Calendar API for the same Google Cloud project.
 
-4. Start the app.
+Start the app:
 
 ```bash
 npm run dev
 ```
 
-5. Connect Google Calendar.
+Connect Google Calendar at `http://localhost:3000/admin`, enter `ADMIN_SECRET`, and complete the owner OAuth flow. Then share `http://localhost:3000`.
 
-Open `http://localhost:3000/admin`, enter `ADMIN_SECRET`, and complete the owner OAuth flow. Then share `http://localhost:3000`.
+## Commands
+
+```bash
+npm install
+npm run dev
+npm run typecheck
+npm run build
+npm run start
+npm run gen:key
+```
 
 ## Configuration
 
@@ -97,6 +112,13 @@ Example availability:
 
 Luxon weekday numbers are Monday `1` through Sunday `7`.
 
+## Deployment Notes
+
+- Set `APP_BASE_URL` to the public URL before connecting Google OAuth in production.
+- Add the production callback URL to the same Google OAuth web client, for example `https://your-domain.example/api/admin/google/callback`.
+- Mount a persistent disk for SQLite, or set `DATABASE_PATH` to a persistent location.
+- Keep one running instance per database file so booking locks stay reliable.
+
 ## Security Notes
 
 - Do not commit `.env`, Google OAuth client JSON files, or `data/*.db*`.
@@ -104,13 +126,15 @@ Luxon weekday numbers are Monday `1` through Sunday `7`.
 - The app is designed for a single owner and single instance. Use a persistent disk if deploying with SQLite.
 - If a secret was ever committed to a public repo, rotate it before rewriting history.
 
-## Development
+## Project Docs
 
-```bash
-npm run typecheck
-npm run build
-```
+- [Architecture](docs/architecture.md)
+- [Implementation blueprint](docs/blueprint.md)
+- [API contract](contracts/api.yaml)
+- [Changelog](CHANGELOG.md)
+- [Security policy](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
 
 ## License
 
-MIT
+MIT, see [LICENSE](LICENSE).
