@@ -26,6 +26,8 @@ One shareable booking page. One Google Calendar owner. No team scheduler, accoun
 
 </div>
 
+<p align="center">English | <a href="README.zh-CN.md">简体中文</a></p>
+
 ---
 
 ## The Problem
